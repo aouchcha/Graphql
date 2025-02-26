@@ -38,6 +38,7 @@ export async function GetUserData(query, Err) {
         return json.data
         
     } catch (error) {
+        alert("oui iuu")
         console.log("error",error);
     }
 }

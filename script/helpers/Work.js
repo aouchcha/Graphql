@@ -1,22 +1,24 @@
-export function ExtractData(trans, skills) {
+export function ExtractData(trans, skills, projects) {
     const Arr = Array.from(trans).reverse()
     const Arr2 = Array.from(skills)
-    let Top_project_XP = Arr[0].amount
-    let Top_project_XP_name = ''
-    let LastFiveProjectValidate = ``
-    for (let i=0; i<Arr.length; i++) {
-        if (Arr[i].amount > Top_project_XP) {
-            Top_project_XP = Arr[i].amount
-            Top_project_XP_name =  Arr[i].path.split("/")[3].replaceAll("-", " ")
-        }
+    const Names = Array.from(projects).reverse()
+
+    if (Arr.length == 0 && Arr2.length == 0 && Names.length == 0) {
+        document.body.innerHTML = ''
+        document.body.innerHTML = '<h1>There is no data to see</h1>'
+        setTimeout(() => {
+            localStorage.removeItem('token')
+            document.body.innerHTML = ''
+            location.href = "/"
+        }, 2000)
+        // document.body.append(LogingView())
+        return
         
-        const name = Arr[i].path.split("/")[3].replaceAll("-", " ")
-        if (i<5) {
-            LastFiveProjectValidate += `
-                <li>${name}</li>
-            `
-        }
     }
+    console.log({Names});
+    
+    const Top_project_XP_name =  Names[0].object.name
+    //Store Unique Skills with ignoring duplicate
     let Temp = [];
     for(let i = 0; i < Arr2.length; i++) {
         let found = false;
@@ -34,7 +36,7 @@ export function ExtractData(trans, skills) {
             Temp.push(Arr2[i]);
         }
     }
-    console.log(Temp);
+    
     Temp = Temp.sort((a,b) => b.amount - a.amount).slice(0,5)
     let TopSkills = ``
     for(let i=0; i<Temp.length;i++) {
@@ -43,7 +45,7 @@ export function ExtractData(trans, skills) {
     const initialValue = 0;
     const XpAmount = Arr.reduce((accumulator, currentValue) => accumulator + currentValue.amount, initialValue);
     const TopXpProject = Arr.sort((a,b) => b.amount - a.amount)
-    return {Top_project_XP, Top_project_XP_name, TopSkills, XpAmount, TopXpProject}
+    return {Top_project_XP_name, TopSkills, XpAmount, TopXpProject}
 }
 
 export function FormatFixer(amount) {
@@ -52,6 +54,6 @@ export function FormatFixer(amount) {
     }else if (amount >= 1000) {
         return `${(amount/1000).toFixed()}kb`
     }else {
-        return `${(amount/100).toFixed()}B`
+        return `${(amount).toFixed()}B`
     }
 }

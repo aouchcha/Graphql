@@ -31,7 +31,6 @@ function subbut(Doc) {
             const username = document.querySelector('#username')
             const pass = document.querySelector('#pass')
             const Err = document.querySelector('.Error')
-            console.log({"username":username.value, "pass":pass.value, "Heelo":Err.innerHTML});
             
             const Token = await LogIn(username.value, pass.value, Err)
             if (Token) {

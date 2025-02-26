@@ -8,8 +8,9 @@ import { ExtractData, FormatFixer } from "../helpers/Work.js"
 export async function HomeView() {
     document.body.innerHTML = ''
     const Userdata = await GetUserData(UserData, document.querySelector('.Error'))
-
-    const data = ExtractData(Userdata.transaction, Userdata.skills)
+    console.log({Userdata});
+    
+    const data = ExtractData(Userdata.transaction, Userdata.skills, Userdata.projects)
     const app = `
         <header>
             <h1>Graphql</h1>
@@ -33,7 +34,7 @@ export async function HomeView() {
             </div>
             <div class="ExtraInfos">
                 <p>Total XP : <span>${(data.XpAmount/1000).toFixed()}kB</span></p>
-                <p>Project with the highset Xp : <span>${data.Top_project_XP_name} = ${FormatFixer(data.Top_project_XP)}</span></p>
+                <p>The Last Validate Project : <span>${data.Top_project_XP_name}</span></p>
             </div>
         </div>
         <div class="GraphsContainer">
