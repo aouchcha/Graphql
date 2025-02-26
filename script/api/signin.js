@@ -15,6 +15,7 @@ export async function LogIn(username, pass, Err) {
         Err.style.display = "flex"
         setTimeout(() => {
             Err.innerHTML = ``
+            Err.style.display = "none"
         }, 3000)
         return
     }

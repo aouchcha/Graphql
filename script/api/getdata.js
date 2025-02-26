@@ -1,12 +1,12 @@
 import { ErrorComp } from "../Components/ErrorCompo.js";
-import { FirstTokenValue } from "../views/loginView.js";
 
 export async function GetUserData(query, Err) {
     const Token = localStorage.getItem('token')
-    if (!Token || (Token !== FirstTokenValue && FirstTokenValue !== undefined)) {
+    if (!Token) {
         Err.innerHTML = ErrorComp("Unothorized")
         setTimeout(() => {
             Err.innerHTML = ``
+            Err.style.display = "none"
         }, 3000)
         document.body.innerHTML = ''
         return
@@ -27,6 +27,7 @@ export async function GetUserData(query, Err) {
             Err.innerHTML = ErrorComp("Faild to fetch data check your connection")
             setTimeout(() => {
                 Err.innerHTML = ``
+                Err.style.display = "none"
             }, 3000)
             return
         }

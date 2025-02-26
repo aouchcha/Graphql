@@ -1,9 +1,6 @@
 export function ErrorComp(message) {
-    
-    
-       const ErrC = `
+    const ErrC = `
             <p>Error : ${message}</p>
          `
-    
     return ErrC
 }

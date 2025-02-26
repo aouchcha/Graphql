@@ -1,20 +1,15 @@
 import { GetUserData } from "../api/getdata.js"
 import { DrawRectGraph } from "../Components/RectGraphCompo.js"
 import { UserData } from "../querys/UserDataQuery.js"
-import { FirstTokenValue, LogingView } from "./loginView.js"
+import { LogingView } from "./loginView.js"
 import { DrawCircleGraph } from "../Components/CircleGraph.js"
 import { ExtractData, FormatFixer } from "../helpers/Work.js"
 
 export async function HomeView() {
     document.body.innerHTML = ''
-    const Userdata = await GetUserData(UserData, document.querySelector('.Error'),FirstTokenValue)
-    console.log({Userdata});
-    
-    
-    const data = ExtractData(Userdata.transaction)
-    console.log(data);
-    
-    
+    const Userdata = await GetUserData(UserData, document.querySelector('.Error'))
+
+    const data = ExtractData(Userdata.transaction, Userdata.skills)
     const app = `
         <header>
             <h1>Graphql</h1>
@@ -29,8 +24,8 @@ export async function HomeView() {
         </div>
         <div class="container">
             <div class="LastProjectDone">
-                <h2>My last 5 project validated :</h2>
-                ${data.LastFiveProjectValidate}
+                <h2>My Highest skills :</h2><br>
+                    ${data.TopSkills}
             </div>
             <div class="CircleGraph">
                 <h2>Audit Transactions :</h2>
@@ -72,7 +67,6 @@ function HoverFunctionality(Rects) {
             
             const Id = e.target.getAttribute('data-rect')
             const Xp = parseFloat(e.target.getAttribute('height'))*300
-            console.log(Xp);
             const Text = document.getElementById(`${Id}`)
             ProjectName = Text.textContent
             Text.textContent = `Project Xp : ${FormatFixer(Xp)}`            

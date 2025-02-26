@@ -17,4 +17,10 @@ export const UserData = `{
             path
             createdAt
         }
+        skills :  transaction( where: { type: { _like: "skill%" } }) {
+            type
+            amount
+        }
+
+        
 }`

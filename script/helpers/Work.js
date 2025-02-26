@@ -1,5 +1,6 @@
-export function ExtractData(Data) {
-    const Arr = Array.from(Data).reverse()
+export function ExtractData(trans, skills) {
+    const Arr = Array.from(trans).reverse()
+    const Arr2 = Array.from(skills)
     let Top_project_XP = Arr[0].amount
     let Top_project_XP_name = ''
     let LastFiveProjectValidate = ``
@@ -16,10 +17,33 @@ export function ExtractData(Data) {
             `
         }
     }
+    let Temp = [];
+    for(let i = 0; i < Arr2.length; i++) {
+        let found = false;
+        for(let j = 0; j < Temp.length; j++) {
+            if(Arr2[i].type === Temp[j].type) {
+                if(Arr2[i].amount > Temp[j].amount) {
+                    Temp[j] = Arr2[i];
+                }
+                found = true;
+                break;
+            }
+        }
+        
+        if(!found) {
+            Temp.push(Arr2[i]);
+        }
+    }
+    console.log(Temp);
+    Temp = Temp.sort((a,b) => b.amount - a.amount).slice(0,5)
+    let TopSkills = ``
+    for(let i=0; i<Temp.length;i++) {
+        TopSkills += `<li>${Temp[i].type} = ${Temp[i].amount}%</li>`
+    }
     const initialValue = 0;
     const XpAmount = Arr.reduce((accumulator, currentValue) => accumulator + currentValue.amount, initialValue);
     const TopXpProject = Arr.sort((a,b) => b.amount - a.amount)
-    return {Top_project_XP, Top_project_XP_name, LastFiveProjectValidate, XpAmount, TopXpProject}
+    return {Top_project_XP, Top_project_XP_name, TopSkills, XpAmount, TopXpProject}
 }
 
 export function FormatFixer(amount) {

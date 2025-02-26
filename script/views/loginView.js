@@ -1,6 +1,5 @@
 import { LogIn } from "../api/signin.js"
 import { HomeView } from "./homeView.js"
-export let FirstTokenValue
 
 export function LogingView() {
     const LoginPage = `
@@ -18,9 +17,6 @@ export function LogingView() {
         </div>
     `
     const LoginDoc = document.createRange().createContextualFragment(LoginPage)
-    
-    // console.log(LoginDoc.querySelector('#submit'), LoginDoc);
-    console.log(localStorage.getItem("token") === FirstTokenValue);
     
     subbut(LoginDoc)
     return LoginDoc
@@ -40,7 +36,6 @@ function subbut(Doc) {
             const Token = await LogIn(username.value, pass.value, Err)
             if (Token) {
                 document.body.innerHTML = ''
-                FirstTokenValue = Token
                 localStorage.setItem("token", Token)
                 document.body.append(await HomeView())
             }
