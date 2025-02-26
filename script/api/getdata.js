@@ -4,9 +4,13 @@ import { FirstTokenValue } from "../views/loginView.js";
 export async function GetUserData(query, Err) {
     const Token = localStorage.getItem('token')
     if (!Token || (Token !== FirstTokenValue && FirstTokenValue !== undefined)) {
-        Err.innerHTML = ErrorComp()
+        Err.innerHTML = ErrorComp("Unothorized")
+        setTimeout(() => {
+            Err.innerHTML = ``
+        }, 3000)
         document.body.innerHTML = ''
         return
+        
     }
     try {
         const res = await fetch('https://learn.zone01oujda.ma/api/graphql-engine/v1/graphql', {
@@ -19,9 +23,16 @@ export async function GetUserData(query, Err) {
                 query: query,
             }),
         })
+        if (!res.ok) {
+            Err.innerHTML = ErrorComp("Faild to fetch data check your connection")
+            setTimeout(() => {
+                Err.innerHTML = ``
+            }, 3000)
+            return
+        }
 
         const json = await res.json();
-        console.log(json.data);
+        // console.log(json.data);
         
         return json.data
         

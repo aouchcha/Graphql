@@ -1,24 +1,19 @@
 import { GetUserData } from "../api/getdata.js"
-import { Trans } from "../querys/TransictionsDataQuery.js"
+import { DrawRectGraph } from "../Components/RectGraphCompo.js"
 import { UserData } from "../querys/UserDataQuery.js"
 import { FirstTokenValue, LogingView } from "./loginView.js"
+import { DrawCircleGraph } from "../Components/CircleGraph.js"
+import { ExtractData, FormatFixer } from "../helpers/Work.js"
 
 export async function HomeView() {
+    document.body.innerHTML = ''
     const Userdata = await GetUserData(UserData, document.querySelector('.Error'),FirstTokenValue)
-    let Gender = ""
-    if (Userdata.user[0].attrs.gender == "Male") {
-        Gender = "Mr"
-    }else {
-        Gender = "Mme"
-    }
-    const ProjectDone = Array.from(Userdata.user[0].groups)
-    console.log("ProjectDone ===>",ProjectDone);
+    console.log({Userdata});
     
-    const Transaction = await GetUserData(Trans, document.querySelector('.Error'),FirstTokenValue)
-    const Arr = Transaction.transaction
-    const initialValue = 0;
-    const XpAmount = Arr.reduce((accumulator, currentValue) => accumulator + currentValue.amount, initialValue);
-    console.log(XpAmount);
+    
+    const data = ExtractData(Userdata.transaction)
+    console.log(data);
+    
     
     const app = `
         <header>
@@ -28,16 +23,37 @@ export async function HomeView() {
         <div class="Error"></div>
         <div class="profile">
         <div class="BasicInfos">
-            <p>Hello ${Gender} : <span>${Userdata.user[0].firstName} ${Userdata.user[0].lastName}</span></p>
-            <p>Username : <span>${Userdata.user[0].login}</span></p>
-            <p>Campus : ${Userdata.user[0].campus}</p>
-            <p>Audit Ratio : ${(Userdata.user[0].auditRatio).toFixed(1)}</p>
+        <p><span>${Userdata.user[0].login}</span></p><span class="diveder"></span>
+        <p><span>${Userdata.user[0].firstName} ${Userdata.user[0].lastName}</span></p><span class="diveder"></span>
+        <p><span>${Userdata.user[0].campus}</span></p>
+        </div>
+        <div class="container">
+            <div class="LastProjectDone">
+                <h2>My last 5 project validated :</h2>
+                ${data.LastFiveProjectValidate}
+            </div>
+            <div class="CircleGraph">
+                <h2>Audit Transactions :</h2>
+                ${DrawCircleGraph(Userdata.user[0])}
+            </div>
+            <div class="ExtraInfos">
+                <p>Total XP : <span>${(data.XpAmount/1000).toFixed()}kB</span></p>
+                <p>Project with the highset Xp : <span>${data.Top_project_XP_name} = ${FormatFixer(data.Top_project_XP)}</span></p>
+            </div>
+        </div>
+        <div class="GraphsContainer">
+            <div class="RectGraph">
+                <h2>Top 5 Xp Transactions :</h2>
+                ${DrawRectGraph(data.TopXpProject)}
+            </div>
+            
         </div>
     </div>
     `
     
     const HomeDoc = document.createRange().createContextualFragment(app)
     LogoutFunctionality(HomeDoc.querySelector('.logout'))
+    HoverFunctionality(HomeDoc.querySelectorAll('.rect'))
     return HomeDoc
 }
 
@@ -47,5 +63,24 @@ function LogoutFunctionality(logout_butt) {
         document.body.innerHTML = ''
         document.body.append(LogingView())
     })
+}
 
+function HoverFunctionality(Rects) {
+    let ProjectName = ''
+    Rects.forEach(Rect => {
+        Rect.addEventListener('mouseover', (e) => {
+            
+            const Id = e.target.getAttribute('data-rect')
+            const Xp = parseFloat(e.target.getAttribute('height'))*300
+            console.log(Xp);
+            const Text = document.getElementById(`${Id}`)
+            ProjectName = Text.textContent
+            Text.textContent = `Project Xp : ${FormatFixer(Xp)}`            
+        })
+        Rect.addEventListener('mouseout', (e) => {
+            const Id = e.target.getAttribute('data-rect');
+            const Text = document.getElementById(Id);
+            Text.textContent = ProjectName
+        });
+    });
 }

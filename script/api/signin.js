@@ -11,7 +11,8 @@ export async function LogIn(username, pass, Err) {
         }
     })
     if (!res.ok) {
-        Err.innerHTML = ErrorComp()
+        Err.innerHTML = ErrorComp("Unothrized")
+        Err.style.display = "flex"
         setTimeout(() => {
             Err.innerHTML = ``
         }, 3000)

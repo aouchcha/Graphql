@@ -42,7 +42,7 @@ function subbut(Doc) {
                 document.body.innerHTML = ''
                 FirstTokenValue = Token
                 localStorage.setItem("token", Token)
-                document.body.append(HomeView())
+                document.body.append(await HomeView())
             }
         }
 

@@ -7,15 +7,14 @@ export const UserData = `{
         login
         attrs
         login
-        groups(where: {group: {status: {_eq: finished}, _and: {path: {_like: "%module%"}}}}) {
-            id
-            path
-            group {
-                path
-                members {
-                    userLogin
-                }
-            }
-        }
+        totalUp
+        totalDown
     }
+        transaction(where :{type: {_eq: "xp"}, _and: [{path: {_like: "%module%"}}, {path: {_nilike: "%piscine-js/%"}}]}) {
+            id
+            type
+            amount
+            path
+            createdAt
+        }
 }`
